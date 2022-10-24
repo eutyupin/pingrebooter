@@ -13,7 +13,7 @@ public class RebooterService {
     private final String DEFAULT_IP = "8.8.8.8";
 
     @Scheduled(cron = "@hourly") // "fixedDelay = 60*60*1000" --/or/--  cron = "@hourly"  --/or/--  cron = "${name-of-the-cron:0 0/30 * * * ?}"
-    public void computePrice() throws InterruptedException {
+    public void computePrice() {
         if (util.pingIPAddress(DEFAULT_IP)) {
            logger.info(" -- command: ping " + DEFAULT_IP + " returns 'OK' status, don't need to reboot.");
         } else {
