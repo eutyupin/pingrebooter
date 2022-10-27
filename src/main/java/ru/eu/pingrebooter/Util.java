@@ -9,9 +9,10 @@ import java.io.IOException;
 public class Util {
 
     public boolean pingIPAddress(String pingCommand) {
-        boolean pingResult;
+        Process p1 = null;
+        boolean pingResult = false;
         try {
-            Process p1 = Runtime.getRuntime().exec(pingCommand);
+            p1 = Runtime.getRuntime().exec(pingCommand);
             int returnVal = p1.waitFor();
             pingResult = (returnVal==0);
         } catch (Exception e) {
