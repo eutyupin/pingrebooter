@@ -1,22 +1,16 @@
 package ru.eu.pingrebooter;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.logging.Logger;
 
 @Service
 @RequiredArgsConstructor
 public class RebooterService {
     private final Util util;
-    @Autowired
-    private Environment env;
-
     @Value("${commands.systemRestart}")
     private String systemRestartCommand;
     @Value("${commands.serviceRestart}")
@@ -36,9 +30,10 @@ public class RebooterService {
         }
     }
 
-    @Scheduled(cron = "0 0/30 * * * *")
+    @Scheduled(cron = "0 0/30 * * * *") //restart comm_machine service every 30 minutes
     public void restartCommMachine() {
         util.restartCommMachine(serviceRestartCommand);
+        logger.info("comm_machine has been restarted");
     }
 
 }

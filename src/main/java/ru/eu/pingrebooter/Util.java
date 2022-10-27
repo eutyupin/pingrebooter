@@ -2,7 +2,6 @@ package ru.eu.pingrebooter;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
 import java.io.IOException;
 
 @Component
@@ -10,10 +9,9 @@ import java.io.IOException;
 public class Util {
 
     public boolean pingIPAddress(String pingCommand) {
-        Process p1 = null;
-        boolean pingResult = false;
+        boolean pingResult;
         try {
-            p1 = Runtime.getRuntime().exec(pingCommand);
+            Process p1 = Runtime.getRuntime().exec(pingCommand);
             int returnVal = p1.waitFor();
             pingResult = (returnVal==0);
         } catch (Exception e) {
