@@ -1,0 +1,5 @@
+commands:
+  serviceRestart: echo negrasdelfuego|sudo -S service comm_machine restart
+  systemRestart: shutdown -r now
+  ping: ping -c 4
+  defaultIp: 8.8.8.8

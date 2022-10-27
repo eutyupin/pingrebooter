@@ -9,11 +9,11 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class Util {
 
-    public boolean pingIPAddress(String ip) {
+    public boolean pingIPAddress(String pingCommand) {
         Process p1 = null;
         boolean pingResult = false;
         try {
-            p1 = Runtime.getRuntime().exec("ping -c 4 8.8.8.8");
+            p1 = Runtime.getRuntime().exec(pingCommand);
             int returnVal = p1.waitFor();
             pingResult = (returnVal==0);
         } catch (Exception e) {
@@ -22,11 +22,20 @@ public class Util {
         return pingResult;
     }
 
-    public void rebootSystem() {
+
+    public void rebootSystem(String systemRestartCommand) {
         try {
-            Runtime.getRuntime().exec("shutdown -r now");
+            Runtime.getRuntime().exec(systemRestartCommand);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getMessage() + " --- " + e.getCause());
+        }
+    }
+
+    public void restartCommMachine(String serviceRestartCommand) {
+        try {
+            Runtime.getRuntime().exec(serviceRestartCommand);
+        } catch (IOException e) {
+            System.out.println(e.getMessage() + " --- " + e.getCause());
         }
     }
 }

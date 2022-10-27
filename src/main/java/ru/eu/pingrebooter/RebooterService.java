@@ -1,24 +1,44 @@
 package ru.eu.pingrebooter;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
 import java.util.logging.Logger;
 
 @Service
 @RequiredArgsConstructor
 public class RebooterService {
     private final Util util;
-    private Logger logger = Logger.getLogger(RebooterService.class.getName());
-    private final String DEFAULT_IP = "8.8.8.8";
+    @Autowired
+    private Environment env;
 
-    @Scheduled(cron = "@hourly") // "fixedDelay = 60*60*1000" --/or/--  cron = "@hourly"  --/or/--  cron = "${name-of-the-cron:0 0/30 * * * ?}"
-    public void computePrice() {
-        if (util.pingIPAddress(DEFAULT_IP)) {
-           logger.info(" -- command: ping " + DEFAULT_IP + " returns 'OK' status, don't need to reboot.");
+    @Value("${commands.systemRestart}")
+    private String systemRestartCommand;
+    @Value("${commands.serviceRestart}")
+    private String serviceRestartCommand;
+    @Value("${commands.ping}")
+    private String pingCommand;
+    @Value("${commands.defaultIp}")
+    private String defaultIp;
+    private Logger logger = Logger.getLogger(RebooterService.class.getName());
+
+    @Scheduled(fixedDelay = 5000) // "fixedDelay = 60*60*1000" --/or/--  cron = "@hourly"  --/or/--  cron = "0 0/20 * * * *" --every 20 minutes
+    public void checkConnection() {
+        if (util.pingIPAddress(pingCommand + " " + defaultIp)) {
+           logger.info(" -- command: ping " + defaultIp + " returns 'OK' status, don't need to reboot.");
         } else {
-            util.rebootSystem();
+            util.rebootSystem(systemRestartCommand);
         }
+    }
+
+    @Scheduled(cron = "0 0/30 * * * *")
+    public void restartCommMachine() {
+        util.restartCommMachine(serviceRestartCommand);
     }
 
 }
